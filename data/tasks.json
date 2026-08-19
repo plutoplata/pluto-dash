@@ -1,1 +1,112 @@
-[{"id":"real-001","title":"Bootstrap OpenClaw + agent setup","status":"done","priority":"high","tag":"setup","loe":"M","assignee":"P","createdAt":"2026-08-18T00:00:00.000Z"},{"id":"real-002","title":"Configure integrations (Gmail, Calendar, GitHub, Figma)","status":"done","priority":"high","tag":"setup","loe":"S","assignee":"P","createdAt":"2026-08-18T00:00:00.000Z"},{"id":"real-003","title":"Multi-agent architecture (comms, code agents)","status":"done","priority":"med","tag":"agent","loe":"M","assignee":"P","createdAt":"2026-08-18T00:00:00.000Z"},{"id":"real-004","title":"Build + deploy Pluto Dashboard","status":"done","priority":"high","tag":"pluto","loe":"M","assignee":"P","createdAt":"2026-08-19T00:00:00.000Z"},{"id":"real-005","title":"Cost optimization (heartbeat → Haiku, trim context)","status":"done","priority":"med","tag":"pluto","loe":"S","assignee":"P","createdAt":"2026-08-19T00:00:00.000Z"},{"id":"real-006","title":"Collect portfolio project files from Claude CW","status":"in-progress","priority":"high","tag":"portfolio","loe":"S","assignee":"T","createdAt":"2026-08-19T00:00:00.000Z"},{"id":"real-007","title":"Write portfolio case studies","status":"backlog","priority":"high","tag":"portfolio","loe":"L","assignee":"T","createdAt":"2026-08-19T00:00:00.000Z"},{"id":"real-008","title":"Design + build portfolio site","status":"backlog","priority":"high","tag":"portfolio","loe":"L","assignee":"P","createdAt":"2026-08-19T00:00:00.000Z"},{"id":"real-009","title":"Add task CRUD to dashboard","status":"backlog","priority":"low","tag":"pluto","loe":"M","assignee":"P","createdAt":"2026-08-19T00:00:00.000Z"}]
+[
+  {
+    "id": "real-001",
+    "title": "Bootstrap OpenClaw + agent setup",
+    "status": "done",
+    "priority": "high",
+    "tag": "setup",
+    "loe": "M",
+    "assignee": "P",
+    "createdAt": "2026-08-18T00:00:00.000Z"
+  },
+  {
+    "id": "real-002",
+    "title": "Configure integrations (Gmail, Calendar, GitHub, Figma)",
+    "status": "done",
+    "priority": "high",
+    "tag": "setup",
+    "loe": "S",
+    "assignee": "P",
+    "createdAt": "2026-08-18T00:00:00.000Z"
+  },
+  {
+    "id": "real-003",
+    "title": "Multi-agent architecture (comms, code agents)",
+    "status": "done",
+    "priority": "med",
+    "tag": "agent",
+    "loe": "M",
+    "assignee": "P",
+    "createdAt": "2026-08-18T00:00:00.000Z"
+  },
+  {
+    "id": "real-004",
+    "title": "Build + deploy Pluto Dashboard",
+    "status": "done",
+    "priority": "high",
+    "tag": "pluto",
+    "loe": "M",
+    "assignee": "P",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-005",
+    "title": "Cost optimization (heartbeat \u2192 Haiku, trim context)",
+    "status": "done",
+    "priority": "med",
+    "tag": "pluto",
+    "loe": "S",
+    "assignee": "P",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-006",
+    "title": "Collect portfolio project files from Claude CW",
+    "status": "in-progress",
+    "priority": "high",
+    "tag": "portfolio",
+    "loe": "S",
+    "assignee": "T",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-007",
+    "title": "Write portfolio case studies",
+    "status": "backlog",
+    "priority": "high",
+    "tag": "portfolio",
+    "loe": "L",
+    "assignee": "T",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-008",
+    "title": "Design + build portfolio site",
+    "status": "backlog",
+    "priority": "high",
+    "tag": "portfolio",
+    "loe": "L",
+    "assignee": "P",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-009",
+    "title": "Add task CRUD to dashboard",
+    "status": "backlog",
+    "priority": "low",
+    "tag": "pluto",
+    "loe": "M",
+    "assignee": "P",
+    "createdAt": "2026-08-19T00:00:00.000Z"
+  },
+  {
+    "id": "real-010",
+    "title": "Update resume (Stadium Goods/Farfetch era)",
+    "status": "in-progress",
+    "priority": "high",
+    "tag": "portfolio",
+    "loe": "S",
+    "assignee": "T",
+    "createdAt": "2026-08-19T18:26:07.648207+00:00"
+  },
+  {
+    "id": "real-011",
+    "title": "Build portfolio site (case studies + layout)",
+    "status": "in-progress",
+    "priority": "high",
+    "tag": "portfolio",
+    "loe": "XL",
+    "assignee": "T",
+    "createdAt": "2026-08-19T18:26:07.648207+00:00"
+  }
+]
