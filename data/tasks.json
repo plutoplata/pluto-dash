@@ -108,5 +108,15 @@
     "loe": "XL",
     "assignee": "T",
     "createdAt": "2026-08-19T18:26:07.648207+00:00"
+  },
+  {
+    "id": "real-012",
+    "title": "Add Google Drive access (openclaw auth google --scopes drive,docs)",
+    "status": "backlog",
+    "priority": "low",
+    "tag": "setup",
+    "loe": "XS",
+    "assignee": "T",
+    "createdAt": "2026-08-19T18:32:42.562717+00:00"
   }
 ]
