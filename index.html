@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pluto Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; }
+
+:root {
+  --bg:          oklch(98.5% 0.005 95);
+  --surface:     oklch(96.5% 0.006 95);
+  --surface-2:   oklch(93% 0.009 95);
+  --border:      oklch(87% 0.012 95);
+  --text:        oklch(17% 0.005 95);
+  --text-muted:  oklch(52% 0.013 95);
+  --accent:      oklch(43% 0.11 154);
+  --accent-mid:  oklch(62% 0.10 154);
+  --accent-dim:  oklch(90% 0.042 154);
+  --accent-glow: oklch(43% 0.11 154 / 0.08);
+  --green:       oklch(62% 0.18 145);
+  --green-dim:   oklch(92% 0.06 145);
+  --amber:       oklch(72% 0.16 74);
+  --amber-dim:   oklch(93% 0.06 74);
+  --red:         oklch(60% 0.20 24);
+  --red-dim:     oklch(93% 0.05 24);
+  --font:        'Outfit', sans-serif;
+  --r:           8px;
+  --r-lg:        12px;
+  --sidebar-w:   224px;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* ─── Shell ─────────────────────────────────────── */
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── Sidebar ───────────────────────────────────── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* Brand */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.brand-icon {
+  width: 30px; height: 30px;
+  background: var(--accent);
+  border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.brand-text { flex: 1; min-width: 0; }
+.brand-name { font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.brand-sub  { font-size: 10.5px; color: var(--text-muted); }
+
+/* Status dot */
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25);
+  flex-shrink: 0;
+  animation: pulse-dot 2.5s ease-in-out infinite;
+  transition: background 0.3s;
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 2px oklch(62% 0.18 145 / 0.25); }
+  50%       { box-shadow: 0 0 0 5px oklch(62% 0.18 145 / 0.08); }
+}
+.status-dot.offline {
+  background: var(--red);
+  box-shadow: none;
+  animation: none;
+}
+.status-dot.stale {
+  background: var(--amber);
+  box-shadow: 0 0 0 2px oklch(72% 0.16 74 / 0.25);
+}
+
+/* Nav */
+.nav-section { padding: 12px 10px 4px; flex-shrink: 0; }
+.nav-label {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); padding: 2px 6px 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r);
+  color: var(--text-muted);
+  font-size: 13px; font-weight: 400;
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+  min-height: 36px;
+}
+.nav-item:hover  { background: var(--surface-2); color: var(--text); }
+.nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
+.nav-icon { width: 15px; height: 15px; flex-shrink: 0; }
+.proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── Token section ─────────────────────────────── */
+.token-section {
+  padding: 14px 14px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.token-label {
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.token-label-refresh {
+  font-size: 9px; color: var(--text-muted); opacity: 0.6;
+  cursor: pointer; padding: 2px 4px; border-radius: 4px;
+  transition: opacity 0.2s;
+}
+.token-label-refresh:hover { opacity: 1; }
+
+/* Monthly card */
+.token-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.token-card-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.donut-wrap { position: relative; flex-shrink: 0; }
+.donut-center-text {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.donut-pct  { font-size: 11px; font-weight: 700; line-height: 1; }
+.token-meta { flex: 1; min-width: 0; }
+.token-card-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+.token-card-val   { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.token-card-sub   { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+/* Health badge */
+.health-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 9.5px; font-weight: 500;
+  padding: 2px 8px; border-radius: 99px; margin-top: 7px;
+}
+.badge-ok   { background: var(--green-dim); color: oklch(38% 0.14 145); }
+.badge-warn { background: var(--amber-dim); color: oklch(48% 0.14 74); }
+.badge-crit { background: var(--red-dim);   color: oklch(42% 0.18 24); }
+.badge-dot  { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* Today linear gauge card */
+.gauge-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px;
+}
+.gauge-top {
+  display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px;
+}
+.gauge-label { font-size: 10px; color: var(--text-muted); }
+.gauge-badge {
+  font-size: 9.5px; font-weight: 500; padding: 1px 7px; border-radius: 99px;
+}
+.gauge-track {
+  width: 100%; height: 8px;
+  background: var(--surface-2); border-radius: 99px;
+  position: relative; overflow: visible;
+}
+.gauge-fill {
+  height: 100%; border-radius: 99px;
+  transition: width 0.6s ease, background 0.3s;
+  max-width: 100%;
+  position: relative;
+}
+.gauge-limit-line {
+  position: absolute; top: -3px; bottom: -3px; width: 2px;
+  background: var(--border); border-radius: 1px;
+  right: 0;
+}
+.gauge-numbers {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 7px;
+}
+.gauge-used  { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+.gauge-limit { font-size: 10px; color: var(--text-muted); }
+
+/* ─── Main ──────────────────────────────────────── */
+.main {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  min-width: 0;
+}
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 26px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-shrink: 0;
+}
+.header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.hamburger {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: var(--r);
+  color: var(--text-muted);
+  transition: background 0.12s;
+  flex-shrink: 0;
+}
+.hamburger:hover { background: var(--surface-2); }
+.header-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+.header-sub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.header-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 13px;
+  border-radius: var(--r);
+  font-size: 12.5px; font-weight: 500;
+  border: 1px solid var(--border);
+  background: white; color: var(--text-muted);
+  transition: all 0.12s;
+  min-height: 34px;
+  white-space: nowrap;
+}
+.btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* ─── Kanban ────────────────────────────────────── */
+.kanban-pane {
+  overflow-y: auto;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.section-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+.section-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-muted); font-weight: 500;
+}
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  align-items: start;
+  flex: 1;
+}
+.kanban-col { min-width: 0; }
+.kanban-col-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+  position: sticky; top: 0;
+  background: var(--bg);
+  padding: 4px 0 6px;
+  z-index: 10;
+}
+.col-name {
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--text-muted);
+}
+.col-count {
+  font-size: 10px;
+  background: var(--surface-2); color: var(--text-muted);
+  padding: 1px 7px; border-radius: 99px;
+}
+
+/* Task cards */
+.task-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 11px 13px;
+  margin-bottom: 9px;
+  transition: border-color 0.12s, box-shadow 0.12s, transform 0.1s;
+  position: relative;
+}
+.task-card:hover {
+  border-color: var(--accent-mid);
+  box-shadow: 0 3px 14px var(--accent-glow);
+  transform: translateY(-1px);
+}
+.task-top { display: flex; align-items: flex-start; gap: 8px; }
+.priority-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.p-high { background: oklch(62% 0.21 24); }
+.p-med  { background: oklch(75% 0.16 74); }
+.p-low  { background: var(--accent-mid); }
+.task-title { font-size: 12.5px; font-weight: 400; line-height: 1.35; flex: 1; }
+.task-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.task-tag {
+  font-size: 10px; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 1px 7px; border-radius: var(--r);
+}
+.task-assignee {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-dim); border: 1px solid var(--accent-mid);
+  color: var(--accent); font-size: 9.5px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.task-active { border-color: var(--accent) !important; border-left-width: 3px; }
+.task-done   { opacity: 0.42; }
+.task-done .task-title { text-decoration: line-through; }
+
+/* Empty col state */
+.col-empty {
+  font-size: 11px; color: var(--text-muted);
+  text-align: center; padding: 18px 0;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--r-lg);
+  opacity: 0.7;
+}
+
+/* ─── Overlay ──────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: oklch(17% 0.005 95 / 0.35);
+  z-index: 90;
+}
+.sidebar-overlay.visible { display: block; }
+
+/* ─── Mobile (≤768px) ───────────────────────────── */
+@media (max-width: 768px) {
+  body { overflow: hidden; }
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--sidebar-w);
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 100;
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .hamburger { display: flex; }
+
+  .header {
+    padding: 12px 16px;
+  }
+
+  .kanban-pane {
+    padding: 16px;
+    overflow-y: hidden;
+  }
+
+  .kanban {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    flex: 1;
+    height: calc(100vh - 120px);
+    align-items: stretch;
+    padding-bottom: 16px;
+  }
+
+  .kanban-col {
+    min-width: calc(100vw - 48px);
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .kanban-col-hd {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+  }
+
+  .section-hd { margin-bottom: 12px; }
+}
+
+/* ─── Loading shimmer ───────────────────────────── */
+@keyframes shimmer {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+.loading { animation: shimmer 1.4s ease-in-out infinite; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="shell">
+
+  <!-- ─── Sidebar ─────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand + status dot -->
+    <div class="sidebar-brand">
+      <div class="brand-icon">P</div>
+      <div class="brand-text">
+        <div class="brand-name">Pluto</div>
+        <div class="brand-sub" id="brand-sub">AI Assistant</div>
+      </div>
+      <span class="status-dot" id="status-dot" title="Checking…"></span>
+    </div>
+
+    <!-- Nav -->
+    <div class="nav-section">
+      <div class="nav-label">Workspace</div>
+      <div class="nav-item active">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/>
+          <rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/>
+        </svg>Overview
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M13 2H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+          <path d="M5 6h6M5 9.5h4"/>
+        </svg>Projects
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 4h12M2 8h8M2 12h5"/><circle cx="13.5" cy="12" r="1.75"/>
+        </svg>Tasks
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="14" height="14" rx="2"/>
+          <path d="M2 11.5l3.5-4 2.5 2.5 3-4 3 3"/>
+        </svg>Analytics
+      </div>
+      <div class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="2.25"/>
+          <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15"/>
+        </svg>Settings
+      </div>
+    </div>
+
+    <div class="nav-section" style="margin-top:2px">
+      <div class="nav-label">Projects</div>
+      <div class="nav-item">
+        <span class="proj-dot" style="background:oklch(62% 0.21 24)"></span>Portfolio Rebuild
+      </div>
+      <div class="nav-item">
+        <span class="proj-dot" style="background:oklch(75% 0.16 74)"></span>Pluto Dashboard
+      </div>
+      <div class="nav-item" style="opacity:0.5">
+        <span class="proj-dot" style="background:var(--accent-mid)"></span>Agent Setup
+      </div>
+    </div>
+
+    <!-- Token Stats -->
+    <div class="token-section">
+      <span class="token-label">
+        Token Usage
+        <span class="token-label-refresh" id="refresh-btn" title="Refresh">↺</span>
+      </span>
+
+      <!-- Monthly -->
+      <div class="token-card">
+        <div class="token-card-row">
+          <div class="donut-wrap">
+            <svg width="48" height="48" viewBox="0 0 48 48" id="donut-svg"></svg>
+            <div class="donut-center-text">
+              <span class="donut-pct" id="donut-pct-text">—</span>
+            </div>
+          </div>
+          <div class="token-meta">
+            <div class="token-card-label">This Month</div>
+            <div class="token-card-val loading" id="monthly-cost">—</div>
+            <div class="token-card-sub" id="monthly-sub">Loading…</div>
+          </div>
+        </div>
+        <div class="health-badge badge-ok" id="monthly-badge">
+          <span class="badge-dot"></span><span id="monthly-badge-text">Loading…</span>
+        </div>
+      </div>
+
+      <!-- Today linear gauge -->
+      <div class="gauge-card">
+        <div class="gauge-top">
+          <span class="gauge-label">Today</span>
+          <span class="gauge-badge badge-ok" id="daily-badge">—</span>
+        </div>
+        <div class="gauge-track">
+          <div class="gauge-fill" id="gauge-fill" style="width:0%">
+            <div class="gauge-limit-line"></div>
+          </div>
+        </div>
+        <div class="gauge-numbers">
+          <span class="gauge-used loading" id="gauge-used">—</span>
+          <span class="gauge-limit" id="gauge-limit-label">of 50k daily</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ─── Main ─────────────────────────────────────── -->
+  <main class="main">
+    <header class="header">
+      <div class="header-left">
+        <button class="hamburger" id="hamburger" aria-label="Open menu">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M2 4.5h14M2 9h14M2 13.5h14"/>
+          </svg>
+        </button>
+        <div>
+          <div class="header-title">Overview</div>
+          <div class="header-sub" id="header-sub">Loading…</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn" id="refresh-all-btn">↺ Refresh</button>
+      </div>
+    </header>
+
+    <div class="kanban-pane">
+      <div class="section-hd">
+        <span class="section-title">Task Board</span>
+        <span class="section-title" id="task-count" style="letter-spacing:0">—</span>
+      </div>
+      <div class="kanban" id="kanban-board">
+        <!-- Rendered by JS -->
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+        <div class="kanban-col"><div class="col-empty loading">Loading…</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ─── State ──────────────────────────────────────────────
+let tasks = [];
+let stats = null;
+let lastUpdatedAt = null;
+
+// ─── Helpers ────────────────────────────────────────────
+function fmt(n) {
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return String(n);
+}
+function fmtCost(n) {
+  if (n < 0.01) return '<$0.01';
+  return '$' + n.toFixed(2);
+}
+function today() {
+  return new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+}
+function healthClass(pct) {
+  if (pct >= 0.85) return 'crit';
+  if (pct >= 0.65) return 'warn';
+  return 'ok';
+}
+function badgeText(pct, ctx) {
+  const daysLeft = 31 - new Date().getDate();
+  if (ctx === 'month') {
+    if (pct >= 0.85) return `⚠ Critical — ${daysLeft}d left`;
+    if (pct >= 0.65) return `↗ Watch it — ${daysLeft}d left`;
+    return `✓ Healthy — ${daysLeft}d left`;
+  }
+  if (pct >= 1.0) return '⚠ Over limit';
+  if (pct >= 0.85) return '⚠ High';
+  if (pct >= 0.65) return '↗ Watch';
+  return '↑ Good';
+}
+
+const COLORS = {
+  ok:   'oklch(62% 0.18 145)',
+  warn: 'oklch(72% 0.16 74)',
+  crit: 'oklch(60% 0.20 24)'
+};
+
+// ─── Status dot (based on data freshness) ───────────────
+function updateStatus(updatedAt) {
+  const dot = document.getElementById('status-dot');
+  if (!updatedAt) {
+    dot.className = 'status-dot offline';
+    dot.title = 'No data';
+    return;
+  }
+  const ageMs = Date.now() - new Date(updatedAt).getTime();
+  const ageMins = ageMs / 60000;
+  if (ageMins < 15) {
+    dot.className = 'status-dot';
+    dot.title = 'Data fresh';
+  } else if (ageMins < 120) {
+    dot.className = 'status-dot stale';
+    dot.title = 'Data is a bit old';
+  } else {
+    dot.className = 'status-dot offline';
+    dot.title = 'Data is stale';
+  }
+}
+
+// ─── Header subtitle (Updated X min ago) ────────────────
+function updateHeaderSub(updatedAt) {
+  const sub = document.getElementById('header-sub');
+  const dateStr = today();
+  if (!updatedAt) {
+    sub.textContent = dateStr + ' · data unavailable';
+    return;
+  }
+  const ageMs = Date.now() - new Date(updatedAt).getTime();
+  const ageMins = Math.floor(ageMs / 60000);
+  let agoStr;
+  if (ageMins < 1) {
+    agoStr = 'just now';
+  } else if (ageMins < 60) {
+    agoStr = `${ageMins} min ago`;
+  } else {
+    const hrs = Math.floor(ageMins / 60);
+    agoStr = `${hrs}h ago`;
+  }
+  sub.textContent = `${dateStr} · Updated ${agoStr}`;
+}
+
+// ─── Token stats ────────────────────────────────────────
+function renderStats(s) {
+  if (!s) return;
+  const monthlyPct = s.monthlyPct || 0;
+  const dailyPct = s.dailyPct || 0;
+  const mH = healthClass(monthlyPct);
+  const dH = healthClass(dailyPct);
+
+  // Cost
+  const costEl = document.getElementById('monthly-cost');
+  costEl.classList.remove('loading');
+  costEl.textContent = fmtCost(s.estCostMonth) + ' est.';
+
+  // Sub line
+  document.getElementById('monthly-sub').textContent =
+    `${fmt(s.tokensMonth)} of ${fmt(s.monthlyLimit)} tokens`;
+
+  // Monthly badge
+  const badge = document.getElementById('monthly-badge');
+  badge.className = `health-badge badge-${mH}`;
+  document.getElementById('monthly-badge-text').textContent = badgeText(monthlyPct, 'month');
+
+  // Donut
+  drawDonut(monthlyPct, mH);
+
+  // Daily gauge
+  const gaugeUsed = document.getElementById('gauge-used');
+  gaugeUsed.classList.remove('loading');
+  gaugeUsed.textContent = fmt(s.tokensToday);
+
+  document.getElementById('gauge-limit-label').textContent = `of ${fmt(s.dailyLimit)} daily`;
+
+  const fill = document.getElementById('gauge-fill');
+  fill.style.width = Math.min(dailyPct * 100, 100).toFixed(1) + '%';
+  fill.style.background = COLORS[dH];
+
+  const db = document.getElementById('daily-badge');
+  db.className = `gauge-badge badge-${dH}`;
+  db.textContent = badgeText(dailyPct, 'day');
+}
+
+function drawDonut(pct, hClass) {
+  const svg = document.getElementById('donut-svg');
+  const cx = 24, cy = 24, r = 18, sw = 5;
+  const circ = 2 * Math.PI * r;
+  const used = circ * Math.min(pct, 1);
+  const stroke = COLORS[hClass];
+  svg.innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="oklch(87% 0.012 95)" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${stroke}" stroke-width="${sw}"
+      stroke-dasharray="${used.toFixed(2)} ${circ.toFixed(2)}"
+      stroke-dashoffset="${(circ * 0.25).toFixed(2)}"
+      stroke-linecap="round"/>
+  `;
+  const pctEl = document.getElementById('donut-pct-text');
+  pctEl.textContent = Math.round(pct * 100) + '%';
+  pctEl.style.color = stroke;
+}
+
+// ─── Task board ──────────────────────────────────────────
+const COLS = [
+  { id: 'backlog',     label: 'Backlog' },
+  { id: 'in-progress', label: 'In Progress' },
+  { id: 'review',      label: 'Review' },
+  { id: 'done',        label: 'Done' }
+];
+
+function renderBoard() {
+  const board = document.getElementById('kanban-board');
+  const total = tasks.length;
+  document.getElementById('task-count').textContent = `${total} task${total !== 1 ? 's' : ''}`;
+
+  board.innerHTML = '';
+  for (const col of COLS) {
+    const colTasks = tasks.filter(t => t.status === col.id);
+    const colEl = document.createElement('div');
+    colEl.className = 'kanban-col';
+    colEl.dataset.col = col.id;
+
+    // Header
+    const hd = document.createElement('div');
+    hd.className = 'kanban-col-hd';
+    hd.innerHTML = `<span class="col-name">${col.label}</span><span class="col-count">${colTasks.length}</span>`;
+    colEl.appendChild(hd);
+
+    // Tasks
+    for (const task of colTasks) {
+      colEl.appendChild(buildTaskCard(task));
+    }
+
+    // Empty state
+    if (colTasks.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'col-empty';
+      empty.textContent = 'Empty';
+      colEl.appendChild(empty);
+    }
+
+    board.appendChild(colEl);
+  }
+}
+
+function buildTaskCard(task) {
+  const div = document.createElement('div');
+  const isDone = task.status === 'done';
+  div.className = 'task-card' +
+    (task.status === 'in-progress' ? ' task-active' : '') +
+    (isDone ? ' task-done' : '');
+  div.dataset.id = task.id;
+
+  const pClass = { high: 'p-high', med: 'p-med', low: 'p-low' }[task.priority] || 'p-low';
+
+  div.innerHTML = `
+    <div class="task-top">
+      <span class="priority-dot ${pClass}"></span>
+      <span class="task-title">${escHtml(task.title)}</span>
+    </div>
+    <div class="task-footer">
+      <span class="task-tag">${escHtml(task.tag || '')}</span>
+      <span class="task-assignee">${escHtml(task.assignee || 'P')}</span>
+    </div>
+  `;
+
+  return div;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Fetching ────────────────────────────────────────────
+async function fetchStats() {
+  try {
+    const res = await fetch('./data/stats.json', { cache: 'no-cache' });
+    const data = await res.json();
+    stats = data;
+    lastUpdatedAt = data.updatedAt || null;
+    renderStats(data);
+    updateStatus(lastUpdatedAt);
+    updateHeaderSub(lastUpdatedAt);
+  } catch {
+    updateStatus(null);
+    updateHeaderSub(null);
+  }
+}
+
+async function fetchTasks() {
+  try {
+    const res = await fetch('./data/tasks.json', { cache: 'no-cache' });
+    const data = await res.json();
+    tasks = data;
+    renderBoard();
+  } catch {
+    // board stays as-is
+  }
+}
+
+async function refreshAll() {
+  await Promise.allSettled([fetchStats(), fetchTasks()]);
+}
+
+// ─── Sidebar (mobile) ────────────────────────────────────
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebar-overlay');
+
+document.getElementById('hamburger').addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('visible');
+});
+
+// ─── Refresh button ──────────────────────────────────────
+document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+document.getElementById('refresh-all-btn').addEventListener('click', refreshAll);
+
+// ─── Init ────────────────────────────────────────────────
+refreshAll();
+setInterval(refreshAll, 60000);
+
+// Init donut placeholder
+drawDonut(0, 'ok');
+</script>
+</body>
+</html>
