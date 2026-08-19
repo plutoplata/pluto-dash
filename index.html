@@ -788,20 +788,19 @@ function buildTaskCard(task) {
 
   const pClass = { high: 'p-high', med: 'p-med', low: 'p-low' }[task.priority] || 'p-low';
 
+  const avatarHtml = task.assignee === 'P'
+    ? `<span class="task-assignee assignee-p" style="padding:0;overflow:hidden;flex-shrink:0"><img src="./assets/pluto.jpg" alt="Pluto" style="width:100%;height:100%;object-fit:cover;"></span>`
+    : `<span class="task-assignee ${task.assignee === 'T' ? 'assignee-t' : 'assignee-default'}" style="flex-shrink:0">${escHtml(task.assignee || '?')}</span>`;
+
   div.innerHTML = `
     <div class="task-top">
       <span class="priority-dot ${pClass}"></span>
       <span class="task-title">${escHtml(task.title)}</span>
+      ${avatarHtml}
     </div>
     <div class="task-footer">
       <span class="task-tag">${escHtml(task.tag || '')}</span>
-      <div style="display:flex;align-items:center;gap:5px">
-        ${task.loe ? `<span class="task-loe loe-${escHtml(task.loe.toLowerCase())}">${escHtml(task.loe.toUpperCase())}</span>` : ''}
-        ${task.assignee === 'P'
-      ? `<span class="task-assignee assignee-p" style="padding:0;overflow:hidden"><img src="./assets/pluto.jpg" alt="Pluto" style="width:100%;height:100%;object-fit:cover;"></span>`
-      : `<span class="task-assignee ${task.assignee === 'T' ? 'assignee-t' : 'assignee-default'}">${escHtml(task.assignee || 'P')}</span>`
-    }
-      </div>
+      ${task.loe ? `<span class="task-loe loe-${escHtml(task.loe.toLowerCase())}">${escHtml(task.loe.toUpperCase())}</span>` : ''}
     </div>
   `;
 
