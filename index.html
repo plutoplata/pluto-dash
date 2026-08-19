@@ -329,20 +329,28 @@ body {
   background: var(--surface); border: 1px solid var(--border);
   padding: 1px 7px; border-radius: var(--r);
 }
+/* LOE badge — color-coded by size */
 .task-loe {
-  font-size: 9.5px; font-weight: 600;
-  background: var(--accent-dim);
-  color: var(--accent);
-  border: 1px solid oklch(80% 0.06 154);
-  padding: 1px 6px; border-radius: var(--r);
-  letter-spacing: 0.03em;
+  font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 4px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: 1px solid;
 }
+.loe-xs { background: oklch(92% 0.06 145); color: oklch(38% 0.14 145); border-color: oklch(80% 0.10 145); }
+.loe-s  { background: oklch(91% 0.05 200); color: oklch(38% 0.14 200); border-color: oklch(78% 0.09 200); }
+.loe-m  { background: oklch(93% 0.06 74);  color: oklch(44% 0.14 74);  border-color: oklch(80% 0.11 74); }
+.loe-l  { background: oklch(93% 0.06 40);  color: oklch(44% 0.16 40);  border-color: oklch(80% 0.12 40); }
+.loe-xl { background: oklch(93% 0.05 24);  color: oklch(42% 0.18 24);  border-color: oklch(80% 0.14 24); }
+/* Assignee avatar — circular, person-coded */
 .task-assignee {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--accent-dim); border: 1px solid var(--accent-mid);
-  color: var(--accent); font-size: 9.5px; font-weight: 600;
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 9px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border: 1.5px solid;
 }
+.assignee-p { background: oklch(91% 0.05 280); color: oklch(38% 0.15 280); border-color: oklch(76% 0.10 280); }
+.assignee-t { background: oklch(93% 0.06 30);  color: oklch(42% 0.16 30);  border-color: oklch(78% 0.12 30); }
+.assignee-default { background: var(--surface-2); color: var(--text-muted); border-color: var(--border); }
 .task-active { border-color: var(--accent) !important; border-left-width: 3px; }
 .task-done   { opacity: 0.42; }
 .task-done .task-title { text-decoration: line-through; }
@@ -788,8 +796,8 @@ function buildTaskCard(task) {
     <div class="task-footer">
       <span class="task-tag">${escHtml(task.tag || '')}</span>
       <div style="display:flex;align-items:center;gap:5px">
-        ${task.loe ? `<span class="task-loe">${escHtml(task.loe)}</span>` : ''}
-        <span class="task-assignee">${escHtml(task.assignee || 'P')}</span>
+        ${task.loe ? `<span class="task-loe loe-${escHtml(task.loe.toLowerCase())}">${escHtml(task.loe.toUpperCase())}</span>` : ''}
+        <span class="task-assignee ${task.assignee === 'T' ? 'assignee-t' : task.assignee === 'P' ? 'assignee-p' : 'assignee-default'}">${escHtml(task.assignee || 'P')}</span>
       </div>
     </div>
   `;
