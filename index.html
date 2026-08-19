@@ -329,6 +329,14 @@ body {
   background: var(--surface); border: 1px solid var(--border);
   padding: 1px 7px; border-radius: var(--r);
 }
+.task-loe {
+  font-size: 9.5px; font-weight: 600;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid oklch(80% 0.06 154);
+  padding: 1px 6px; border-radius: var(--r);
+  letter-spacing: 0.03em;
+}
 .task-assignee {
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--accent-dim); border: 1px solid var(--accent-mid);
@@ -779,7 +787,10 @@ function buildTaskCard(task) {
     </div>
     <div class="task-footer">
       <span class="task-tag">${escHtml(task.tag || '')}</span>
-      <span class="task-assignee">${escHtml(task.assignee || 'P')}</span>
+      <div style="display:flex;align-items:center;gap:5px">
+        ${task.loe ? `<span class="task-loe">${escHtml(task.loe)}</span>` : ''}
+        <span class="task-assignee">${escHtml(task.assignee || 'P')}</span>
+      </div>
     </div>
   `;
 
