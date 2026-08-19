@@ -341,13 +341,17 @@ body {
 .loe-m  { background: oklch(93% 0.06 74);  color: oklch(44% 0.14 74);  border-color: oklch(80% 0.11 74); }
 .loe-l  { background: oklch(93% 0.06 40);  color: oklch(44% 0.16 40);  border-color: oklch(80% 0.12 40); }
 .loe-xl { background: oklch(93% 0.05 24);  color: oklch(42% 0.18 24);  border-color: oklch(80% 0.14 24); }
-/* Assignee avatar — circular, person-coded */
+/* Assignee avatar — pinned to top-right corner of card */
 .task-assignee {
-  width: 22px; height: 22px; border-radius: 50%;
+  position: absolute;
+  top: 11px; right: 13px;
+  width: 24px; height: 24px; border-radius: 50%;
   font-size: 9px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; border: 1.5px solid;
+  border: 1.5px solid;
+  flex-shrink: 0;
 }
+.task-top { padding-right: 32px; }
 .assignee-p { background: oklch(91% 0.05 280); color: oklch(38% 0.15 280); border-color: oklch(76% 0.10 280); }
 .assignee-t { background: oklch(93% 0.06 30);  color: oklch(42% 0.16 30);  border-color: oklch(78% 0.12 30); }
 .assignee-default { background: var(--surface-2); color: var(--text-muted); border-color: var(--border); }
