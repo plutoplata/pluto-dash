@@ -797,7 +797,10 @@ function buildTaskCard(task) {
       <span class="task-tag">${escHtml(task.tag || '')}</span>
       <div style="display:flex;align-items:center;gap:5px">
         ${task.loe ? `<span class="task-loe loe-${escHtml(task.loe.toLowerCase())}">${escHtml(task.loe.toUpperCase())}</span>` : ''}
-        <span class="task-assignee ${task.assignee === 'T' ? 'assignee-t' : task.assignee === 'P' ? 'assignee-p' : 'assignee-default'}">${escHtml(task.assignee || 'P')}</span>
+        ${task.assignee === 'P'
+      ? `<span class="task-assignee assignee-p" style="padding:0;overflow:hidden"><img src="./assets/pluto.jpg" alt="Pluto" style="width:100%;height:100%;object-fit:cover;"></span>`
+      : `<span class="task-assignee ${task.assignee === 'T' ? 'assignee-t' : 'assignee-default'}">${escHtml(task.assignee || 'P')}</span>`
+    }
       </div>
     </div>
   `;
