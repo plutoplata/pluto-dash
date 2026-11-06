@@ -1,11 +1,11 @@
 {
-  "tokensToday": 1251331,
-  "tokensMonth": 5584736,
-  "estCostToday": 0.8893,
-  "estCostMonth": 3.8634,
+  "tokensToday": 0,
+  "tokensMonth": 5916956,
+  "estCostToday": 0,
+  "estCostMonth": 4.0894,
   "dailyLimit": 50000000,
   "monthlyLimit": 500000000,
-  "dailyPct": 0.025,
-  "monthlyPct": 0.0112,
-  "updatedAt": "2026-11-05T23:23:34.133240+00:00"
+  "dailyPct": 0.0,
+  "monthlyPct": 0.0118,
+  "updatedAt": "2026-11-06T01:23:34.191479+00:00"
 }
